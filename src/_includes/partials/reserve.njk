@@ -1,0 +1,34 @@
+{#
+  予約ボタン。stores.js の reserve_url ひとつで挙動が変わる。
+
+    reserve_url が空      → tel: リンク。ラベル下に電話番号を併記。
+                            (デスクトップでは tel: が効かない環境があるため、
+                             番号そのものを読める状態にしておく)
+    reserve_url にURL     → そのURLへ遷移。チャネル別UTMを自動付与。
+
+  dataLayer には reserve_click を積み、method に 'tel' | 'external' を入れる。
+  導線を切り替えた前後を同じイベントで比較できる。
+
+  引数:
+    place … 'header' | 'hero' | 'sticky'。計測用のラベル。
+    style … 'solid' | 'ghost' | 'bar'
+#}
+
+{% macro reserve_button(store, ui, place, style) %}
+{%- if store.reserve_url -%}
+  {%- set href = store.reserve_url ~ "?utm_source=" ~ store.channel_utm_source ~ "&utm_medium=referral" -%}
+  {%- set method = "external" -%}
+{%- else -%}
+  {%- set href = "tel:" ~ store.tel_raw -%}
+  {%- set method = "tel" -%}
+{%- endif -%}
+<a class="reserve reserve--{{ style }}"
+   href="{{ href }}"
+   {% if method == "external" %}target="_blank" rel="noopener"{% endif %}
+   onclick="dataLayer.push({event:'reserve_click',method:'{{ method }}',location:'{{ place }}'})">
+  <span class="reserve__label">{{ ui.reserve_label }}</span>
+  {%- if method == "tel" %}
+  <span class="reserve__sub">{{ ui.reserve_sub_tel }} {{ store.tel_display }}</span>
+  {%- endif %}
+</a>
+{% endmacro %}

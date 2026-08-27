@@ -1,0 +1,35 @@
+{#
+  計測タグ。stores.js の brand に ID が入っている時だけ出力する。
+  空文字("")のあいだは何も読み込まないので、タグ未発行の状態でも公開できる。
+
+  dataLayer には store_name / store_area / brand / channel を積む。
+  イベント: tel_click / directions_click
+#}
+<script>
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    store_name: '{{ store.slug }}',
+    store_area: '{{ store.region }}',
+    brand: '{{ stores.brand.brand_slug }}',
+    channel: '{{ store.channel_id }}'
+  });
+</script>
+
+{% if stores.brand.gtm_id %}
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','{{ stores.brand.gtm_id }}');</script>
+<!-- End Google Tag Manager -->
+{% endif %}
+
+{% if stores.brand.ga4_id %}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ stores.brand.ga4_id }}"></script>
+<script>
+  window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+  gtag('js', new Date());
+  gtag('config', '{{ stores.brand.ga4_id }}');
+</script>
+{% endif %}

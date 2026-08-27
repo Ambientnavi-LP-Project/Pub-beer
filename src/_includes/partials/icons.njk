@@ -1,0 +1,70 @@
+{#
+  インラインSVGアイコン。写真アセットが未提供のため、図版はすべてここで持つ。
+  写真に差し替える場合は、呼び出し側の icon(...) を <img> に置き換える。
+#}
+
+{% macro icon(name, cls) %}
+{%- if name == "pint" -%}
+<svg class="{{ cls }}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+  <path d="M14 10h20l-2 30H16L14 10Z"/>
+  <path d="M34 16h5a4 4 0 0 1 0 8h-5"/>
+  <path d="M14 20h20" opacity=".55"/>
+</svg>
+{%- elif name == "glass" -%}
+<svg class="{{ cls }}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+  <path d="M18 8h12v8H18z"/>
+  <path d="M20 16h8l2 24H18l2-24Z"/>
+  <path d="M24 22v10" opacity=".55"/>
+</svg>
+{%- elif name == "burger" -%}
+<svg class="{{ cls }}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+  <path d="M10 20c0-6 6-10 14-10s14 4 14 10"/>
+  <path d="M9 25h30M11 30h26"/>
+  <path d="M12 34h24c0 3-3 5-6 5H18c-3 0-6-2-6-5Z"/>
+</svg>
+{%- elif name == "burger-lg" -%}
+<svg viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+  <path d="M14 36c0-12 14-21 31-21s31 9 31 21"/>
+  <path d="M12 44h66M16 53h58"/>
+  <path d="M18 62h54c0 6-6 11-13 11H31c-7 0-13-5-13-11Z"/>
+</svg>
+{%- elif name == "glass-lg" -%}
+<svg viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+  <path d="M28 20h34l-4 56H32l-4-56Z"/>
+  <path d="M62 30h8a9 9 0 0 1 0 18h-7"/>
+  <path d="M28 20c0-5 6-8 17-8s17 3 17 8"/>
+</svg>
+{%- elif name == "pin" -%}
+<svg class="{{ cls }}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+  <path d="M24 43s14-13 14-24a14 14 0 0 0-28 0c0 11 14 24 14 24Z"/>
+  <circle cx="24" cy="19" r="5.5"/>
+</svg>
+{%- elif name == "bracket" -%}
+<svg class="{{ cls }}" viewBox="0 0 120 70" fill="none" aria-hidden="true">
+  <path d="M60 4v18" stroke="#C9A227" stroke-width="2"/>
+  <circle cx="60" cy="4" r="4" fill="#C9A227"/>
+  <path d="M22 22h76" stroke="#C9A227" stroke-width="3"/>
+  <path d="M30 22c0 12 10 20 22 22" stroke="#C9A227" stroke-width="1.5" opacity=".7"/>
+  <path d="M90 22c0 12-10 20-22 22" stroke="#C9A227" stroke-width="1.5" opacity=".7"/>
+  <path d="M32 22v14M88 22v14" stroke="#C9A227" stroke-width="2"/>
+</svg>
+{%- elif name == "beer-illustration" -%}
+<svg viewBox="0 0 220 260" fill="none" aria-hidden="true" style="margin:0 auto;width:min(220px,70%)">
+  <defs>
+    <linearGradient id="beerfill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8A94C"/>
+      <stop offset="55%" stop-color="#C87A2B"/>
+      <stop offset="100%" stop-color="#8B4A14"/>
+    </linearGradient>
+  </defs>
+  <path d="M56 46c0-10 12-16 24-13 6-8 24-9 30-1 12-3 22 4 22 14H56Z" fill="#F0E6D2"/>
+  <path d="M58 46h104l-9 178H67L58 46Z" fill="url(#beerfill)"/>
+  <path d="M58 46h104l-9 178H67L58 46Z" stroke="#E4CE86" stroke-width="2.5"/>
+  <path d="M162 74h20a22 22 0 0 1 0 44h-23" stroke="#E4CE86" stroke-width="2.5" fill="none"/>
+  <circle cx="92" cy="150" r="4" fill="#F0E6D2" opacity=".5"/>
+  <circle cx="118" cy="118" r="3" fill="#F0E6D2" opacity=".45"/>
+  <circle cx="104" cy="190" r="3.4" fill="#F0E6D2" opacity=".4"/>
+  <ellipse cx="110" cy="232" rx="72" ry="10" fill="none" stroke="#C9A227" stroke-width="2" opacity=".55"/>
+</svg>
+{%- endif -%}
+{% endmacro %}

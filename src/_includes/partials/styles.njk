@@ -1,0 +1,339 @@
+{#
+  LP全体のCSS。配色・書体のトークンは :root に集約している。
+  --gut は全セクション共通の左右ガター(スマホ最低24px / PC最大72px)。
+#}
+<style>
+:root{
+  /* palette — british racing green / mahogany / brass */
+  --green:#173A2E;
+  --green-deep:#0D211A;
+  --green-mid:#1F4A3A;
+  --wood:#4A2A18;
+  --wood-light:#6B4023;
+  --brass:#C9A227;
+  --brass-pale:#E4CE86;
+  --cream:#F0E6D2;
+  --cream-dim:#CBBEA4;
+  --amber:#C87A2B;
+
+  --display:"Abril Fatface", Georgia, serif;
+  --jp:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --label:"Barlow Condensed","Hiragino Sans",sans-serif;
+
+  --gut:clamp(24px, 6vw, 72px);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--green-deep);
+  color:var(--cream);
+  font-family:var(--jp);
+  line-height:1.9;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+img,svg{display:block;max-width:100%;}
+a{color:inherit;}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+
+/* ---------- shared ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut);}
+
+.label{
+  font-family:var(--label);
+  text-transform:uppercase;letter-spacing:.34em;
+  font-size:.72rem;font-weight:500;color:var(--brass);
+}
+.rule{height:1px;border:0;margin:0;
+  background:linear-gradient(90deg,transparent,rgba(201,162,39,.55) 15%,rgba(201,162,39,.55) 85%,transparent);}
+.gild{
+  background:linear-gradient(176deg,#F3E0A4 0%,var(--brass) 42%,#8C6A12 62%,#EBD693 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.grain::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  opacity:.16;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.7rem var(--gut);
+  background:rgba(13,33,26,.82);backdrop-filter:blur(9px);
+  border-bottom:1px solid rgba(201,162,39,.28);
+}
+.topbar__name{
+  font-family:var(--label);text-transform:uppercase;letter-spacing:.2em;
+  font-size:.8rem;color:var(--cream-dim);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* ---------- reserve button ---------- */
+.reserve{
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+  text-decoration:none;border-radius:2px;text-align:center;
+  font-family:var(--label);text-transform:uppercase;letter-spacing:.16em;
+  transition:filter .22s ease,background .22s ease;
+}
+.reserve__label{font-weight:600;line-height:1.15;}
+.reserve__sub{
+  font-weight:400;letter-spacing:.1em;opacity:.78;
+  font-size:.72em;line-height:1.4;margin-top:.15em;text-transform:none;
+}
+.reserve--solid{
+  color:var(--green-deep);
+  background:linear-gradient(180deg,var(--brass-pale),var(--brass));
+  padding:.4rem 1.1rem;font-size:.86rem;
+}
+.reserve--solid:hover{filter:brightness(1.12);}
+.reserve--hero{
+  color:var(--green-deep);
+  background:linear-gradient(180deg,var(--brass-pale),var(--brass));
+  padding:.9rem 2.4rem;font-size:1.05rem;
+}
+.reserve--hero:hover{filter:brightness(1.12);}
+.reserve--bar{
+  color:var(--green-deep);
+  background:linear-gradient(180deg,var(--brass-pale),var(--brass));
+  padding:.75rem 1.6rem;font-size:.95rem;flex-shrink:0;
+}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;min-height:100svh;
+  padding:8rem var(--gut) 4rem;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;overflow:hidden;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(201,162,39,.16), transparent 58%),
+    linear-gradient(180deg,var(--green) 0%, var(--green-deep) 100%);
+}
+/* 背景写真。hero_image が未設定のあいだはこの層自体が出力されない。 */
+.hero__photo{
+  position:absolute;inset:0;
+  background-position:center;background-size:cover;background-repeat:no-repeat;
+}
+/* 写真の上に重ねる暗幕。看板と本文を確実に読ませるための層。 */
+.hero__scrim{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(13,33,26,.78) 0%, rgba(13,33,26,.55) 42%, rgba(13,33,26,.92) 100%),
+    radial-gradient(80% 55% at 50% 34%, rgba(13,33,26,.55), transparent 70%);
+}
+.hero__panels{
+  position:absolute;inset:auto 0 0 0;height:38%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 132px),
+    linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.45));
+  border-top:2px solid rgba(201,162,39,.22);opacity:.7;
+}
+.sign{position:relative;width:min(560px,100%);transform-origin:50% 8px;animation:sway 7s ease-in-out infinite;}
+@keyframes sway{0%,100%{transform:rotate(-1.1deg);}50%{transform:rotate(1.1deg);}}
+.sign__bracket{margin:0 auto;width:120px;}
+.sign__board{
+  position:relative;margin:0 auto;padding:2.4rem 1.6rem 2rem;
+  background:linear-gradient(180deg, var(--green-mid), var(--green-deep));
+  border:2px solid var(--brass);
+  box-shadow:
+    inset 0 0 0 6px rgba(13,33,26,.9),
+    inset 0 0 0 7px rgba(201,162,39,.45),
+    0 26px 50px rgba(0,0,0,.55);
+}
+.sign__eyebrow{margin:0 0 1rem;}
+.sign__title{font-family:var(--display);font-size:clamp(2.4rem,7.4vw,4.4rem);line-height:.98;margin:0;}
+.sign__sub{
+  margin:1.1rem 0 0;font-family:var(--label);text-transform:uppercase;
+  letter-spacing:.22em;font-size:clamp(.62rem,1.7vw,.8rem);
+  color:var(--cream-dim);line-height:1.9;
+}
+.sign__cn{display:block;font-family:var(--jp);letter-spacing:.5em;font-size:.9rem;color:var(--brass-pale);margin-top:.5rem;}
+
+.hero__lead{position:relative;margin:3.2rem auto 0;max-width:34rem;
+  font-size:clamp(1.02rem,2.5vw,1.3rem);line-height:2.2;}
+.hero__meta{position:relative;margin:1.6rem 0 0;font-family:var(--label);
+  letter-spacing:.16em;font-size:.85rem;color:var(--cream-dim);}
+.hero__actions{position:relative;display:flex;flex-wrap:wrap;gap:.9rem;justify-content:center;margin-top:2rem;}
+
+.btn{
+  font-family:var(--label);text-transform:uppercase;letter-spacing:.16em;
+  font-size:.9rem;font-weight:600;text-decoration:none;
+  padding:.85rem 1.8rem;border-radius:2px;
+  transition:background .22s ease,color .22s ease,filter .22s ease;
+}
+.btn--solid{color:var(--green-deep);background:linear-gradient(180deg,var(--brass-pale),var(--brass));}
+.btn--solid:hover{filter:brightness(1.12);}
+.btn--ghost{color:var(--brass-pale);border:1px solid rgba(201,162,39,.6);}
+.btn--ghost:hover{background:rgba(201,162,39,.14);}
+
+/* ---------- brass rail ---------- */
+.rail{
+  background:linear-gradient(180deg,var(--wood),#33190D);
+  border-top:1px solid rgba(201,162,39,.4);
+  border-bottom:1px solid rgba(0,0,0,.6);
+  padding:1.15rem var(--gut);overflow:hidden;
+}
+.rail__inner{
+  display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;
+  font-family:var(--label);text-transform:uppercase;letter-spacing:.3em;
+  font-size:.78rem;color:var(--brass-pale);
+}
+.rail__dot{color:rgba(201,162,39,.5);}
+
+/* ---------- sections ---------- */
+.section{position:relative;padding:clamp(4.5rem,10vw,8rem) 0;overflow:hidden;}
+.section--green{background:var(--green);}
+.section--dark{background:var(--green-deep);}
+.section--wood{
+  background:
+    repeating-linear-gradient(92deg, rgba(0,0,0,.14) 0 2px, transparent 2px 9px),
+    linear-gradient(160deg,var(--wood-light),var(--wood) 55%,#331A0C);
+}
+
+.head{max-width:44rem;}
+.head--center{margin:0 auto;text-align:center;}
+.head__title{font-family:var(--jp);font-weight:800;
+  font-size:clamp(1.65rem,4.4vw,2.7rem);line-height:1.5;margin:.9rem 0 0;letter-spacing:.02em;}
+.head__en{display:block;font-family:var(--display);
+  font-size:clamp(1.1rem,2.6vw,1.5rem);margin-top:.7rem;color:var(--brass);}
+.head__body{margin:1.6rem 0 0;color:var(--cream-dim);font-size:1.02rem;}
+
+/* ---------- pillars ---------- */
+.pillars{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:1px;margin-top:3.4rem;
+  background:rgba(201,162,39,.28);border:1px solid rgba(201,162,39,.28);
+}
+.pillar{background:var(--green);padding:2.6rem 1.8rem;text-align:center;}
+.pillar__icon{width:56px;margin:0 auto 1.4rem;color:var(--brass);}
+.pillar__ttl{font-family:var(--jp);font-weight:600;font-size:1.15rem;margin:0;}
+.pillar__en{display:block;font-family:var(--label);text-transform:uppercase;
+  letter-spacing:.24em;font-size:.7rem;color:var(--brass);margin-top:.55rem;}
+.pillar__txt{margin:1rem 0 0;font-size:.94rem;color:var(--cream-dim);line-height:1.95;}
+
+/* ---------- split ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5rem);align-items:center;}
+/* 写真を左、本文を右に入れ替える。並びが単調にならないよう交互に使う。 */
+.split--rev .split__text{order:2;}
+.split--rev .split__art{order:1;}
+
+/* 写真枠。真鍮の細い罫で囲い、外側にわずかな影を落とす。 */
+.photo{position:relative;border:1px solid rgba(201,162,39,.45);overflow:hidden;
+  box-shadow:0 22px 44px rgba(0,0,0,.45);}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* 画像が未設定のときに使うイラスト枠 */
+.artframe{border:1px solid rgba(201,162,39,.45);padding:2.4rem;
+  background:radial-gradient(90% 90% at 50% 20%, rgba(200,122,43,.2), transparent 70%);}
+
+/* ---------- full-width photo band ---------- */
+.band{position:relative;height:clamp(260px,38vw,440px);overflow:hidden;
+  border-top:1px solid rgba(201,162,39,.3);border-bottom:1px solid rgba(201,162,39,.3);}
+.band img{width:100%;height:100%;object-fit:cover;display:block;}
+.band::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(13,33,26,.35), rgba(13,33,26,.15) 45%, rgba(13,33,26,.55));}
+
+/* ---------- pairing line ---------- */
+.pairing-line{
+  margin:2rem 0 0;padding-top:1.6rem;
+  border-top:1px solid rgba(201,162,39,.35);
+  font-family:var(--label);text-transform:uppercase;
+  letter-spacing:.2em;font-size:.92rem;color:var(--brass-pale);
+}
+.pairing-line__amp{font-family:var(--display);text-transform:none;
+  font-size:1.2em;color:var(--brass);letter-spacing:0;padding:0 .25em;}
+
+/* ---------- pairing ---------- */
+.pairing{margin-top:3.5rem;display:flex;align-items:center;justify-content:center;
+  gap:clamp(1rem,4vw,2.6rem);flex-wrap:wrap;}
+.pairing__side{text-align:center;max-width:15rem;}
+.pairing__side svg{margin:0 auto .9rem;color:var(--brass-pale);width:74px;}
+.pairing__name{font-family:var(--jp);font-weight:600;font-size:1.05rem;margin:0;}
+.pairing__note{margin:.4rem 0 0;font-size:.86rem;color:var(--cream-dim);}
+.pairing__x{font-family:var(--display);font-size:clamp(1.6rem,5vw,2.4rem);color:var(--brass);}
+
+/* ---------- nameplate ---------- */
+.plate{
+  border:1px solid rgba(201,162,39,.45);
+  box-shadow:inset 0 0 0 5px rgba(13,33,26,.85), inset 0 0 0 6px rgba(201,162,39,.3);
+  padding:clamp(2.4rem,6vw,4rem) clamp(1.4rem,5vw,3rem);text-align:center;
+  background:linear-gradient(180deg, rgba(23,58,46,.9), rgba(13,33,26,.9));
+}
+.plate__line{font-family:var(--display);font-size:clamp(1.35rem,4.2vw,2.4rem);line-height:1.35;margin:0;}
+.plate__line + .plate__line{margin-top:.5rem;}
+.plate__cn{font-family:var(--jp);font-weight:600;letter-spacing:.42em;
+  font-size:clamp(1.1rem,3.4vw,1.7rem);color:var(--brass-pale);margin:1.4rem 0 0;}
+
+/* ---------- access ---------- */
+.access{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,4.5rem);
+  align-items:start;margin-top:3rem;}
+.info{list-style:none;margin:0;padding:0;}
+.info li{padding:1.4rem 0;border-bottom:1px solid rgba(201,162,39,.25);}
+.info li:first-child{border-top:1px solid rgba(201,162,39,.25);}
+.info__k{font-family:var(--label);text-transform:uppercase;letter-spacing:.26em;
+  font-size:.7rem;color:var(--brass);display:block;margin-bottom:.5rem;}
+.info__v{font-size:1.08rem;line-height:1.8;margin:0;}
+.info__v a{text-decoration:none;border-bottom:1px solid rgba(201,162,39,.5);padding-bottom:2px;}
+.info__jp{display:block;margin-top:.5rem;font-size:.88rem;color:var(--cream-dim);}
+.info__v a:hover{color:var(--brass-pale);}
+.tel-big{font-family:var(--label);font-size:clamp(1.6rem,4.6vw,2.2rem);
+  letter-spacing:.06em;font-weight:600;border-bottom:0 !important;}
+
+.mapcard{border:1px solid rgba(201,162,39,.35);padding:2rem;
+  background:rgba(13,33,26,.55);text-align:center;}
+.mapcard__icon{margin:0 auto 1.2rem;width:52px;color:var(--brass);}
+.mapcard p{margin:0 0 1.5rem;font-size:.95rem;color:var(--cream-dim);}
+.mapcard__photo{margin-bottom:1.5rem;}
+.mapcard iframe{width:100%;height:260px;border:0;margin-bottom:1.5rem;filter:none;}
+
+/* ---------- footer ---------- */
+.foot{background:var(--green-deep);border-top:1px solid rgba(201,162,39,.28);
+  padding:3.4rem var(--gut);text-align:center;}
+.foot__name{font-family:var(--display);font-size:clamp(1rem,2.6vw,1.35rem);
+  line-height:1.6;margin:0 0 .8rem;color:var(--cream);}
+.foot__meta{font-family:var(--label);letter-spacing:.14em;font-size:.82rem;
+  color:var(--cream-dim);margin:0;line-height:2;}
+.foot__meta a{text-decoration:none;color:var(--brass-pale);}
+
+/* ---------- sticky reserve bar (mobile) ---------- */
+.stickybar{
+  display:none;
+  position:fixed;left:0;right:0;bottom:0;z-index:70;
+  align-items:center;justify-content:space-between;gap:1rem;
+  padding:.7rem var(--gut);
+  background:rgba(13,33,26,.94);backdrop-filter:blur(9px);
+  border-top:1px solid rgba(201,162,39,.4);
+}
+.stickybar__txt{
+  font-family:var(--label);letter-spacing:.14em;text-transform:uppercase;
+  font-size:.72rem;color:var(--cream-dim);line-height:1.5;min-width:0;
+}
+.stickybar__txt strong{display:block;color:var(--brass-pale);font-weight:600;font-size:.8rem;}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s ease;}
+.rv.in{opacity:1;transform:none;}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .split,.access{grid-template-columns:1fr;}
+  .split--rev .split__text{order:2;}
+  .split--rev .split__art{order:1;}
+  .pairing__x{transform:rotate(90deg);}
+  .stickybar{display:flex;}
+  body{padding-bottom:74px;}
+  .topbar .reserve{display:none;}       /* スティッキーバーと重複するため隠す */
+}
+@media (max-width:520px){
+  .topbar__name{font-size:.66rem;letter-spacing:.14em;}
+  .rail__inner{gap:1.2rem;font-size:.66rem;letter-spacing:.22em;}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+  .sign{animation:none;}
+  .rv{opacity:1;transform:none;transition:none;}
+}
+</style>

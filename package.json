@@ -1,0 +1,14 @@
+{
+  "name": "pub-beer",
+  "version": "1.0.0",
+  "description": "British Pub Asakusa Japanese Craft Beer Bar Wagyu restaurant 东京酒馆 — LP",
+  "private": true,
+  "scripts": {
+    "build": "eleventy",
+    "dev": "eleventy --serve --port=8080",
+    "clean": "rm -rf _site"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1"
+  }
+}

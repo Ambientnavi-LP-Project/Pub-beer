@@ -1,0 +1,302 @@
+---
+pagination:
+  data: stores.pages
+  size: 1
+  alias: store
+permalink: "/{{ store.region }}/{{ store.slug }}/{{ store.channel_suffix }}index.html"
+eleventyComputed:
+  title: "{{ store.name_full_en }}"
+---
+{% from "partials/icons.njk" import icon %}
+{% from "partials/reserve.njk" import reserve_button %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ store.name_full_en }}</title>
+<meta name="description" content="{{ ui.meta_description }}">
+
+{% if store.channel_id != "default" %}
+<meta name="robots" content="noindex,follow">
+{% if stores.brand.domain %}
+<link rel="canonical" href="https://{{ stores.brand.domain }}/{{ store.region }}/{{ store.slug }}/">
+{% endif %}
+{% endif %}
+
+<meta property="og:type" content="restaurant">
+<meta property="og:title" content="{{ store.name_full_en }}">
+<meta property="og:description" content="{{ ui.meta_description }}">
+{% if store.hero_image %}<meta property="og:image" content="{{ store.hero_image }}">{% endif %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Barlow+Condensed:wght@400;500;600&family=Shippori+Mincho+B1:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+{% include "partials/analytics.njk" %}
+{% include "partials/styles.njk" %}
+
+{# ヒーロー背景。画像が入ったときだけ出力する。横位置と縦位置を切り替える。 #}
+{% if store.hero_image %}
+<style>
+.hero__photo{background-image:url("{{ store.hero_image }}");}
+{% if store.hero_image_portrait %}
+@media (max-aspect-ratio: 1/1){
+  .hero__photo{background-image:url("{{ store.hero_image_portrait }}");}
+}
+{% endif %}
+</style>
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BarOrPub",
+  "name": "{{ store.name_full_en }}",
+  "telephone": "{{ store.tel_display }}",
+  "servesCuisine": ["British", "Japanese"],
+  "address": {
+    "@type": "PostalAddress",
+    "postalCode": "{{ store.address_postal }}",
+    "addressCountry": "JP",
+    "addressRegion": "Tokyo",
+    "addressLocality": "Taito-ku",
+    "streetAddress": "{{ store.address_en_line1 }} {{ store.address_en_line2 }}"
+  }{% if store.hours %},
+  "openingHours": "{{ store.hours }}"{% endif %}{% if store.reserve_url %},
+  "acceptsReservations": "{{ store.reserve_url }}"{% endif %}
+}
+</script>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar__name">{{ store.name_short }} — {{ store.region_label }}</span>
+  {{ reserve_button(store, ui, "header", "solid") }}
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero grain">
+  {% if store.hero_image %}
+  <div class="hero__photo" aria-hidden="true"></div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+  {% else %}
+  <div class="hero__panels" aria-hidden="true"></div>
+  {% endif %}
+
+  <div class="sign">
+    {{ icon("bracket", "sign__bracket") }}
+    <div class="sign__board">
+      <p class="label sign__eyebrow">{{ ui.hero_eyebrow }}</p>
+      <h1 class="sign__title gild">{{ store.sign_line1 }}<br>{{ store.sign_line2 }}</h1>
+      <p class="sign__sub">
+        {{ store.sign_sub }}
+        {% if store.name_zh %}<span class="sign__cn">{{ store.name_zh }}</span>{% endif %}
+      </p>
+    </div>
+  </div>
+
+  <p class="hero__lead">{{ ui.hero_lead_1 }}<br>{{ ui.hero_lead_2 }}</p>
+  <p class="hero__meta">{{ store.address_en_line1 }} · {{ store.address_en_line2 }}</p>
+
+  <div class="hero__actions">
+    {{ reserve_button(store, ui, "hero", "hero") }}
+    {# アンカー先が無いときはボタンを出さない #}
+    {% if store.show_access %}
+    <a class="btn btn--ghost" href="#access">{{ ui.access_label }}</a>
+    {% endif %}
+  </div>
+</header>
+
+<!-- ============ RAIL ============ -->
+<div class="rail">
+  <div class="rail__inner">
+    {% for item in ui.rail %}
+      <span>{{ item }}</span>
+      {% if not loop.last %}<span class="rail__dot">◆</span>{% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ============ CONCEPT ============ -->
+<section class="section section--green grain">
+  <div class="wrap">
+    <div class="head head--center rv">
+      <p class="label">{{ ui.concept_label }}</p>
+      <h2 class="head__title">{{ ui.concept_title }}</h2>
+      <p class="head__body">{{ ui.concept_body }}</p>
+    </div>
+
+    <div class="pillars rv">
+      {% for p in ui.pillars %}
+      <div class="pillar">
+        {{ icon(p.icon, "pillar__icon") }}
+        <h3 class="pillar__ttl">{{ p.title }}</h3>
+        <p class="pillar__txt">{{ p.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ CRAFT BEER ============ -->
+<section class="section section--dark grain">
+  <div class="wrap split">
+    <div class="split__text rv">
+      <p class="label">{{ ui.beer_label }}</p>
+      <h2 class="head__title">{{ ui.beer_title_1 }}<br>{{ ui.beer_title_2 }}</h2>
+      <p class="head__body">{{ ui.beer_body }}</p>
+    </div>
+    <div class="split__art rv">
+      {# 写真が未設定なら SVG イラストに自動で戻る #}
+      {% if store.photo_beer %}
+      <div class="photo">
+        <img src="{{ store.photo_beer.src }}" alt="{{ store.photo_beer.alt }}"
+             width="1000" height="1250" loading="lazy" decoding="async">
+      </div>
+      {% else %}
+      <div class="artframe">{{ icon("beer-illustration") }}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ============ WAGYU ============ -->
+<section class="section section--wood grain">
+  <div class="wrap split split--rev">
+    <div class="split__text rv">
+      <p class="label">{{ ui.wagyu_label }}</p>
+      <h2 class="head__title">{{ ui.wagyu_title }}</h2>
+      <p class="head__body">{{ ui.wagyu_body }}</p>
+      <p class="pairing-line">
+        {{ ui.pairing_left.name }} <span class="pairing-line__amp">&amp;</span> {{ ui.pairing_right.name }}
+      </p>
+    </div>
+    <div class="split__art rv">
+      {% if store.photo_wagyu %}
+      <div class="photo">
+        <img src="{{ store.photo_wagyu.src }}" alt="{{ store.photo_wagyu.alt }}"
+             width="1400" height="1050" loading="lazy" decoding="async">
+      </div>
+      {% else %}
+      <div class="artframe">{{ icon("burger-lg") }}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if store.photo_interior %}
+<!-- ============ PHOTO BAND ============ -->
+<div class="band">
+  <img src="{{ store.photo_interior.src }}" alt="{{ store.photo_interior.alt }}"
+       width="1536" height="1024" loading="lazy" decoding="async">
+</div>
+{% endif %}
+
+<!-- ============ NAMEPLATE ============ -->
+<section class="section section--green grain">
+  <div class="wrap">
+    <div class="plate rv">
+      <p class="label" style="margin:0 0 1.6rem;">{{ ui.plate_label }}</p>
+      <p class="plate__line gild">British Pub Asakusa</p>
+      <p class="plate__line gild">Japanese Craft Beer Bar</p>
+      <p class="plate__line gild">Wagyu restaurant</p>
+      {% if store.name_zh %}<p class="plate__cn">{{ store.name_zh }}</p>{% endif %}
+    </div>
+  </div>
+</section>
+
+{% if store.show_access %}
+<!-- ============ ACCESS ============ -->
+<section class="section section--dark grain" id="access">
+  <div class="wrap">
+    <div class="head rv">
+      <p class="label">{{ ui.access_label }}</p>
+      <h2 class="head__title">{{ ui.access_title }}</h2>
+    </div>
+
+    <div class="access">
+      <ul class="info rv">
+        <li>
+          <span class="info__k">{{ ui.access_k_name }}</span>
+          <p class="info__v">{{ store.name_full_en }}</p>
+        </li>
+        <li>
+          <span class="info__k">{{ ui.access_k_address }}</span>
+          <p class="info__v">
+            {{ store.address_en_line1 }}<br>{{ store.address_en_line2 }}
+            {# 日本語住所はタクシー・地図アプリ用に併記する #}
+            <span class="info__jp">〒{{ store.address_postal }} {{ store.address_jp_line1 }} {{ store.address_jp_line2 }}</span>
+          </p>
+        </li>
+        <li>
+          <span class="info__k">{{ ui.access_k_tel }}</span>
+          <p class="info__v">
+            <a class="tel-big gild" href="tel:{{ store.tel_raw }}"
+               onclick="dataLayer.push({event:'tel_click',location:'access'})">{{ store.tel_display }}</a>
+          </p>
+        </li>
+        {% if store.hours %}
+        <li>
+          <span class="info__k">{{ ui.access_k_hours }}</span>
+          <p class="info__v">{{ store.hours }}{% if store.hours_note %}<br>{{ store.hours_note }}{% endif %}{% if store.closed_note %}<br>{{ store.closed_note }}{% endif %}</p>
+        </li>
+        {% endif %}
+      </ul>
+
+      {% if store.show_map %}
+      <div class="mapcard rv">
+        {% if store.maps_embed %}
+        <iframe src="{{ store.maps_embed }}" loading="lazy" title="{{ store.name_short }} map"
+                referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        {% else %}
+        {{ icon("pin", "mapcard__icon") }}
+        {% endif %}
+        <p>{{ ui.access_map_note }}</p>
+        <a class="btn btn--ghost" target="_blank" rel="noopener"
+           onclick="dataLayer.push({event:'directions_click'})"
+           href="{% if store.maps_link %}{{ store.maps_link }}{% else %}https://www.google.com/maps/search/?api=1&query={{ store.maps_query | urlencode }}{% endif %}">{{ ui.access_map_btn }}</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<footer class="foot">
+  <p class="foot__name">{{ store.name_full_en }}</p>
+  <hr class="rule" style="margin:1.6rem auto;max-width:280px;">
+  <p class="foot__meta">
+    {{ store.address_en_line1 }} · {{ store.address_en_line2 }}<br>
+    〒{{ store.address_postal }} {{ store.address_jp_line1 }} {{ store.address_jp_line2 }}<br>
+    <a href="tel:{{ store.tel_raw }}"
+       onclick="dataLayer.push({event:'tel_click',location:'footer'})">{{ store.tel_display }}</a>
+  </p>
+</footer>
+
+<!-- ============ STICKY BAR (mobile) ============ -->
+<div class="stickybar">
+  <span class="stickybar__txt">
+    <strong>{{ store.name_short }}</strong>
+    {{ ui.reserve_sticky_note | safe }}
+  </span>
+  {{ reserve_button(store, ui, "sticky", "bar") }}
+</div>
+
+<script>
+(function(){
+  var els = document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(el){ el.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  },{threshold:.14, rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>
