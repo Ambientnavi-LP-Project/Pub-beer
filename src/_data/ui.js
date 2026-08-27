@@ -14,8 +14,9 @@
 module.exports = {
   // ---------- hero ----------
   hero_eyebrow: "Asakusa · Tokyo",
-  hero_lead_1: "A British pub in Asakusa,",
-  hero_lead_2: "pouring Japanese craft beer.",
+  // ヒーローのキャッチ。空にすると行ごと出力されない。
+  hero_lead_1: "",
+  hero_lead_2: "",
 
   // ヒーローの写真ストリップ。どんな店かを一目で伝えるための3枚。
   // 画像は stores.js の photo_* を参照する。

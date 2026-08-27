@@ -67,16 +67,8 @@ a{color:inherit;}
   border-bottom:1px solid rgba(201,162,39,.28);
 }
 .topbar__name{
-  font-family:var(--label);min-width:0;line-height:1.35;
-  display:flex;flex-direction:column;gap:.1rem;
-}
-.topbar__short{
-  text-transform:uppercase;letter-spacing:.2em;font-weight:600;
-  font-size:.85rem;color:var(--brass-pale);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.topbar__full{
-  letter-spacing:.1em;font-size:.68rem;color:var(--cream-dim);
+  font-family:var(--label);min-width:0;line-height:1.4;
+  letter-spacing:.12em;font-size:.82rem;color:var(--cream-dim);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
@@ -164,19 +156,20 @@ a{color:inherit;}
 .hero__fullname{position:relative;margin:2.4rem auto 0;max-width:44rem;width:100%;}
 .hero__fullname .rule{opacity:.7;}
 .fullname{
-  margin:.9rem 0;
+  margin:1rem 0;
   font-family:var(--label);
-  text-transform:uppercase;letter-spacing:.14em;
-  font-size:clamp(.74rem,1.9vw,.95rem);
-  line-height:1.9;color:var(--cream);
+  text-transform:uppercase;letter-spacing:.13em;
+  font-size:clamp(.88rem,2.4vw,1.18rem);
+  line-height:1.85;color:var(--cream);
 }
 
 .hero__lead{position:relative;margin:2rem auto 0;max-width:34rem;
   font-size:clamp(1.02rem,2.5vw,1.3rem);line-height:2.2;}
+.hero__lead:empty{display:none;}
 
 /* 業態を一目で伝える写真ストリップ */
 .strip{
-  position:relative;list-style:none;margin:2.2rem 0 0;padding:0;
+  position:relative;list-style:none;margin:2.8rem 0 0;padding:0;
   display:flex;gap:clamp(.5rem,1.6vw,1rem);justify-content:center;flex-wrap:nowrap;
   width:100%;max-width:44rem;
 }
@@ -367,11 +360,8 @@ a{color:inherit;}
   body{padding-bottom:74px;}
   .topbar .reserve{display:none;}       /* スティッキーバーと重複するため隠す */
 }
-@media (max-width:820px){
-  .topbar__full{display:none;}        /* 狭い画面ではフル店名を隠す */
-}
 @media (max-width:520px){
-  .topbar__short{font-size:.72rem;letter-spacing:.14em;}
+  .topbar__name{font-size:.66rem;letter-spacing:.08em;}
   .hero{min-height:auto;padding-top:6rem;}
   .fullname{letter-spacing:.1em;}
   .strip{gap:.4rem;}
