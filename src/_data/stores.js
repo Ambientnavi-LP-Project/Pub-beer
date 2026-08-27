@@ -38,10 +38,13 @@ const STORES = [
     name_jp: "British Pub Asakusa",
     name_zh: "东京酒馆",
 
-    // ▼ ヒーローの吊り看板に出す2行。name_short を分割したもの。
+    // ▼ ヒーローの吊り看板。sign_line1 / sign_line2 が看板の大きな文字。
     sign_line1: "British Pub",
     sign_line2: "Asakusa",
-    sign_sub: "Japanese Craft Beer Bar · Wagyu Restaurant",
+    // 看板の下段。フル店名は看板直下に別ブロックで出しているため空にしている。
+    // 文字列を入れると看板の中に小さく表示される。
+    sign_sub: "",
+    sign_zh: "",
 
     // ▼ 所在地
     city: "Asakusa, Tokyo",
@@ -81,9 +84,23 @@ const STORES = [
     hero_image_portrait: "/images/hero-interior-portrait.jpg",
 
     // ▼ セクション写真。空にするとその枠がSVGイラストに戻る。
-    photo_beer:     { src: "/images/craft-beer.jpg",      alt: "A pint of Japanese craft beer on the bar" },
-    photo_wagyu:    { src: "/images/wagyu-burger.jpg",    alt: "Wagyu burger" },
-    photo_interior: { src: "/images/interior-detail.jpg", alt: "Green panelling and brass rail in the pub" },
+    // thumb はヒーローの写真ストリップ用の軽量版(480x360)。
+    // 省略した場合は src がそのまま使われる。
+    photo_beer: {
+      src:   "/images/craft-beer.jpg",
+      thumb: "/images/craft-beer-thumb.jpg",
+      alt:   "A pint of Japanese craft beer on the bar"
+    },
+    photo_wagyu: {
+      src:   "/images/wagyu-burger.jpg",
+      thumb: "/images/wagyu-burger-thumb.jpg",
+      alt:   "Wagyu burger"
+    },
+    photo_interior: {
+      src:   "/images/interior-detail.jpg",
+      thumb: "/images/interior-detail-thumb.jpg",
+      alt:   "Green panelling and brass rail in the pub"
+    },
 
     // 地図の検索キーワード。住所の全角ハイフン等を正規化したもの。
     // maps_link / maps_embed が未設定でも、これがあれば地図が出る。

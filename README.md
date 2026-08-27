@@ -35,13 +35,16 @@
 
 ## 3. 生成されるURL
 
-`stores.js` の `CHANNELS` により、1店舗につき1ページを生成する。広告用のチャネル別ページ（japan / global / map）は現在無効。復活させるときは `CHANNELS` に行を追加する。
+`stores.js` の `CHANNELS` により、1店舗につき4ページを生成する。
 
 | 種別 | URL | 用途 |
 |---|---|---|
 | default | `/tokyo/asakusa/` | 直接訪問・SEO |
+| japan | `/tokyo/asakusa/japan/` | 日本向け広告 |
+| global | `/tokyo/asakusa/global/` | 海外向け広告 |
+| map | `/tokyo/asakusa/map/` | Googleマップ（GBP）経由 |
 
-チャネルを追加した場合、`default` 以外には noindex が付く。canonical は `brand.domain` が入っている時だけ出力する。
+`default` 以外には noindex が付く。canonical は `brand.domain` が入っている時だけ出力する。
 URL一覧は `/urls.csv` に自動出力され、スプレッドシートから
 `=IMPORTDATA("https://<domain>/urls.csv")` で取り込める。
 
@@ -79,6 +82,7 @@ URL一覧は `/urls.csv` に自動出力され、スプレッドシートから
 | ファイル | 使用箇所 | フィールド |
 |---|---|---|
 | `hero-interior.jpg` / `-portrait.jpg` | ヒーロー背景 | `hero_image` / `hero_image_portrait` |
+| `*-thumb.jpg`（3枚） | ヒーローの写真ストリップ | 各 `photo_*` の `thumb` |
 | `craft-beer.jpg` | Craft beer セクション右 | `photo_beer` |
 | `wagyu-burger.jpg` | Wagyu セクション左 | `photo_wagyu` |
 | `interior-detail.jpg` | 全幅フォトバンド | `photo_interior` |
@@ -88,6 +92,14 @@ URL一覧は `/urls.csv` に自動出力され、スプレッドシートから
 - 縦位置は `@media (max-aspect-ratio: 1/1)` で自動的に切り替わる
 - ヒーローを外観カットに変えるときは `hero_image` の2行を `hero-exterior` 系に差し替えるだけ
 - 写真の上には暗幕（`.hero__scrim`）が自動で重なるので、本文は常に読める
+
+### ヒーローの構成
+
+看板 → フル店名 → キャッチ → 写真ストリップ → 住所 → Reserve の順。
+
+- **フル店名**は真鍮の罫線で挟んで看板直下に置いている。GBP・検索結果・SNSと表記を揃えるための位置。変更するときは `stores.js` の `name_full_en` を直せば、ヒーロー・店名プレート・フッター・`<title>`・JSON-LD すべてに反映される
+- **写真ストリップ**はビール／和牛バーガー／店内の3枚で、どんな店かを一目で伝える枠。並びと見出しは `ui.js` の `hero_strip` で変えられる。参照する写真は `photo` キーで `stores.js` のフィールド名を指定する
+- ストリップは `thumb`（480×360・計80KB）を読む。ヒーローの初回読み込みは背景と合わせて約216KB
 
 ### 未使用にしている理由
 

@@ -71,7 +71,11 @@ eleventyComputed:
 <body>
 
 <div class="topbar">
-  <span class="topbar__name">{{ store.name_short }} — {{ store.region_label }}</span>
+  {# 上段は看板名、下段にフル店名。狭い画面では下段を隠す。 #}
+  <span class="topbar__name">
+    <strong class="topbar__short">{{ store.name_short }}</strong>
+    <span class="topbar__full">{{ store.name_full_en }}</span>
+  </span>
   {{ reserve_button(store, ui, "header", "solid") }}
 </div>
 
@@ -89,14 +93,45 @@ eleventyComputed:
     <div class="sign__board">
       <p class="label sign__eyebrow">{{ ui.hero_eyebrow }}</p>
       <h1 class="sign__title gild">{{ store.sign_line1 }}<br>{{ store.sign_line2 }}</h1>
+      {# 看板の下段。フル店名は看板の直下に別ブロックで出しているので、
+         重複を避けるため既定では空にしてある。stores.js の sign_sub に
+         文字列を入れれば復活する。 #}
+      {% if store.sign_sub %}
       <p class="sign__sub">
         {{ store.sign_sub }}
-        {% if store.name_zh %}<span class="sign__cn">{{ store.name_zh }}</span>{% endif %}
+        {% if store.sign_zh %}<span class="sign__cn">{{ store.sign_zh }}</span>{% endif %}
       </p>
+      {% endif %}
     </div>
   </div>
 
+  {# フル店名。GBP・検索・SNSと表記を揃えるため、看板直下に1ブロックで置く。 #}
+  <div class="hero__fullname">
+    <hr class="rule">
+    <p class="fullname">{{ store.name_full_en }}</p>
+    <hr class="rule">
+  </div>
+
   <p class="hero__lead">{{ ui.hero_lead_1 }}<br>{{ ui.hero_lead_2 }}</p>
+
+  {# 業態が一目で伝わるよう、ビール・和牛バーガー・店内の3枚を並べる。 #}
+  {% if ui.hero_strip %}
+  <ul class="strip">
+    {% for item in ui.hero_strip %}
+      {% set ph = store[item.photo] %}
+      {% if ph %}
+      <li class="strip__item">
+        <div class="strip__photo">
+          <img src="{{ ph.thumb if ph.thumb else ph.src }}" alt="{{ ph.alt }}"
+               width="480" height="360" loading="eager" decoding="async">
+        </div>
+        <span class="strip__cap">{{ item.caption }}</span>
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  {% endif %}
+
   <p class="hero__meta">{{ store.address_en_line1 }} · {{ store.address_en_line2 }}</p>
 
   <div class="hero__actions">

@@ -17,6 +17,14 @@ module.exports = {
   hero_lead_1: "A British pub in Asakusa,",
   hero_lead_2: "pouring Japanese craft beer.",
 
+  // ヒーローの写真ストリップ。どんな店かを一目で伝えるための3枚。
+  // 画像は stores.js の photo_* を参照する。
+  hero_strip: [
+    { photo: "photo_beer",     caption: "Craft beer" },
+    { photo: "photo_wagyu",    caption: "Wagyu burger" },
+    { photo: "photo_interior", caption: "British pub" }
+  ],
+
   // ---------- reserve ----------
   reserve_label: "Reserve",
   reserve_sub_tel: "Call",          // 電話フォールバック時、番号の前に付く語
