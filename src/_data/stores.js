@@ -116,9 +116,6 @@ STORES.forEach((s) => {
 // ============================================================
 const CHANNELS = [
   { id: "default", suffix: "",        utm_source: "lp" },
-  { id: "japan",   suffix: "japan/",  utm_source: "lp-japan" },
-  { id: "global",  suffix: "global/", utm_source: "lp-global" },
-  { id: "map",     suffix: "map/",    utm_source: "lp-map" }
 ];
 
 // 本番LP(全店舗 × 全チャネル)。store.njk が使う。

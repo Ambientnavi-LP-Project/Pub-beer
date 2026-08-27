@@ -35,16 +35,13 @@
 
 ## 3. 生成されるURL
 
-`stores.js` の `CHANNELS` により、1店舗につき4ページを生成する。
+`stores.js` の `CHANNELS` により、1店舗につき1ページを生成する。広告用のチャネル別ページ（japan / global / map）は現在無効。復活させるときは `CHANNELS` に行を追加する。
 
 | 種別 | URL | 用途 |
 |---|---|---|
 | default | `/tokyo/asakusa/` | 直接訪問・SEO |
-| japan | `/tokyo/asakusa/japan/` | 日本向け広告 |
-| global | `/tokyo/asakusa/global/` | 海外向け広告 |
-| map | `/tokyo/asakusa/map/` | Googleマップ（GBP）経由 |
 
-`default` 以外には noindex が付く。canonical は `brand.domain` が入っている時だけ出力する。
+チャネルを追加した場合、`default` 以外には noindex が付く。canonical は `brand.domain` が入っている時だけ出力する。
 URL一覧は `/urls.csv` に自動出力され、スプレッドシートから
 `=IMPORTDATA("https://<domain>/urls.csv")` で取り込める。
 
