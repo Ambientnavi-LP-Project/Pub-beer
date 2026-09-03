@@ -310,7 +310,7 @@ eleventyComputed:
         {% endif %}
         <p>{{ ui.access_map_note }}</p>
         <a class="btn btn--ghost" target="_blank" rel="noopener"
-           data-ga-event="directions_click" data-ga-location="entry_access"
+           data-ga-event="map_click" data-ga-location="entry_access"
            href="{% if store.maps_link %}{{ store.maps_link }}{% else %}https://www.google.com/maps/search/?api=1&query={{ store.maps_query | urlencode }}{% endif %}">{{ ui.access_map_btn }}</a>
       </div>
       {% endif %}
