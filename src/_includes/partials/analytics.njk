@@ -1,9 +1,14 @@
 {#
-  計測タグ。stores.js の brand に ID が入っている時だけ出力する。
+  計測タグ。stores.js の brand に ID が入っている時だけタグを読み込む。
   空文字("")のあいだは何も読み込まないので、タグ未発行の状態でも公開できる。
+  ただし dataLayer への積み込みと委譲リスナーは常に出力する
+  (GTMを後から入れた時点で、テンプレを触らずに計測が始まるようにするため)。
 
-  dataLayer には store_name / store_area / brand / channel を積む。
-  イベント: tel_click / directions_click
+  カスタムディメンション: store_name / store_area / brand / channel / event_label
+  イベント: reserve_click / tel_click / directions_click
+
+  ※ このファイルの ACQ-FORWARD と [data-ga-event] 委譲リスナーは
+    docs/LP作成プロンプト.md「ルール5」で削除禁止。デザイン変更で消さないこと。
 #}
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -13,6 +18,55 @@
     brand: '{{ stores.brand.brand_slug }}',
     channel: '{{ store.channel_id }}'
   });
+</script>
+
+<!-- ACQ-FORWARD : 流入時の計測パラメータを保持し、予約サイトへのリンクに転記する。
+     GA4リンカーが働かなかった場合の保険。削除しないこと。 -->
+<script>
+(function(){
+  var KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_id',
+              'gclid','gbraid','wbraid'];
+  var STORE_KEY = 'acq_params';
+  try {
+    var q = new URLSearchParams(location.search), found = {}, has = false;
+    KEYS.forEach(function(k){ var v = q.get(k); if(v){ found[k] = v; has = true; } });
+    if (has) sessionStorage.setItem(STORE_KEY, JSON.stringify(found));
+  } catch(e){}
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var saved;
+    try { saved = JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null'); } catch(e){}
+    if (!saved) return;
+    // 予約サイトへの外部リンクにだけ転記する。
+    // 自社LP内のリンクや tel: には付けない。
+    var links = document.querySelectorAll('a[href*="tablecheck.com"]');
+    Array.prototype.forEach.call(links, function(a){
+      try {
+        var u = new URL(a.href);
+        Object.keys(saved).forEach(function(k){
+          if (!u.searchParams.has(k)) u.searchParams.set(k, saved[k]);
+        });
+        a.href = u.toString();
+      } catch(e){}
+    });
+  });
+})();
+</script>
+
+<!-- [data-ga-event] 委譲リスナー : クリック計測はすべてここを通す。
+     個別の onclick で dataLayer.push を書くと二重計上になる。削除しないこと。 -->
+<script>
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-ga-event]'); if(!t) return;
+  var payload = {
+    event: t.getAttribute('data-ga-event'),
+    event_label: t.getAttribute('data-ga-location') || ''
+  };
+  var m = t.getAttribute('data-ga-method');
+  if (m) payload.method = m;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(payload);
+});
 </script>
 
 {% if stores.brand.gtm_id %}

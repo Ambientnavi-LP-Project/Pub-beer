@@ -60,11 +60,28 @@ const STORES = [
     tel_display: "080-8378-2101",
     tel_raw: "08083782101",
 
-    // ▼ 未提供のため空。値を入れるとテンプレ側で自動的に表示される。
-    hours: "",            // 例: "17:00 – 24:00"
-    hours_note: "",       // 例: "Open Daily"
-    closed_note: "",      // 例: "定休日 月曜"
-    maps_link: "",        // Googleマップの共有リンク(https://maps.app.goo.gl/...)
+    // ▼ GBP(Googleビジネスプロフィール)から転記。表記はGBP側と一致させること。
+    hours: "11:00 – 23:00",
+    hours_note: "Open Daily",
+    closed_note: "",      // 定休日なし
+
+    // 構造化データ(openingHoursSpecification)用。
+    // hours は表示用の文字列なので、Googleに渡す機械可読な形はこちらに持つ。
+    // 定休日が確定してから入れる。年中無休なら days に7曜日すべてを書く。
+    // 例: { days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    //       opens: "11:00", closes: "23:00" }
+    hours_schema: {
+      days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      opens: "11:00",
+      closes: "23:00"
+    },
+
+    // GBP「共有」→ リンクをコピー
+    maps_link: "https://maps.app.goo.gl/e8bZ411yJd9Li4zZ9",
+    // GBP「共有」→「地図を埋め込む」の src="..." の中身だけ。
+    // 取得時は航空写真(!5e1)・日本語(!1sja)だったため、通常地図(!5e0)・英語(!1sen)に直している。
+    maps_embed: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4256.1651313197435!2d139.7908712!3d35.711985899999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60188fc3673825ab%3A0x13b138ed2b10fd0d!2sBritish%20Pub%20Asakusa%20Japanese%20Craft%20Beer%20Bar%20Wagyu%20restaurant%20%E4%B8%9C%E4%BA%AC%E9%85%92%E9%A6%86!5e0!3m2!1sen!2sjp!4v1788408574637!5m2!1sen!2sjp",
+
     rating: "",
     rating_count: "",
     rating_source: "",
@@ -107,16 +124,15 @@ const STORES = [
     maps_query: "東京都台東区西浅草2-2-2 藤代ビル",
 
     // ▼ 表示の切り替え
-    // GBP(Googleビジネスプロフィール)開設中のため、アクセス欄と地図は非表示。
-    // 準備ができたら true に戻すだけでよい。
+    // GBP開設・営業時間確定にともない、2026-09-03 に両方 true にした。
     //
     // show_access … Access セクション全体(住所・電話・営業時間・地図カード)
     // show_map    … Access 内の地図埋め込みと「Open in Google Maps」ボタン
     //
     // 両方 false でも、住所と電話はヒーローとフッターに残り、
     // 構造化データ(JSON-LD)にも入る。GBPとサイトのNAP一致を保つため。
-    show_access: false,
-    show_map: false
+    show_access: true,
+    show_map: true
   }
 ];
 
@@ -150,11 +166,15 @@ STORES.forEach((s) => {
 
 module.exports = {
   brand: {
-    domain: "",            // 本番ドメイン。決まり次第記入(canonical と urls.csv に使う)
+    domain: "british-beer-pub.halal-food-wagyu.com",  // canonical / og / urls.csv に使う
     brand_name: "British Pub Asakusa",
     brand_slug: "pub-beer",
-    ga4_id: "",            // 空のあいだは計測タグを出力しない
-    gtm_id: "",            // 空のあいだは計測タグを出力しない
+    // GA4(測定ID G-WKH1CC5LZ6 / プロパティ 549444736)は GTM コンテナ側の
+    // GA4設定タグから配信する。ここに ga4_id を入れると gtag も直接読み込まれ、
+    // page_view が二重計上になるため空のままにしておくこと。
+    // GTM側にGA4設定タグが無いことを確認できた場合にだけ、こちらに入れる。
+    ga4_id: "",
+    gtm_id: "GTM-5DGT9H6L",
     meta_pixel_id: ""      // 空にするとピクセルタグを出力しない(停止できる)
   },
   stores: STORES,

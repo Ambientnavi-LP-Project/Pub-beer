@@ -1,0 +1,7 @@
+{# GTMスニペットの2つ目。<body> 直後に置く。head 側だけでは要件を満たさない。 #}
+{% if stores.brand.gtm_id %}
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ stores.brand.gtm_id }}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{% endif %}

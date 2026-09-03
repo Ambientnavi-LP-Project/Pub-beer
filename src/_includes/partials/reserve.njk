@@ -4,19 +4,26 @@
     reserve_url が空      → tel: リンク。ラベル下に電話番号を併記。
                             (デスクトップでは tel: が効かない環境があるため、
                              番号そのものを読める状態にしておく)
-    reserve_url にURL     → そのURLへ遷移。チャネル別UTMを自動付与。
+    reserve_url にURL     → そのURLへ遷移。
 
-  dataLayer には reserve_click を積み、method に 'tel' | 'external' を入れる。
-  導線を切り替えた前後を同じイベントで比較できる。
+  【計測要件・触る前に読むこと】docs/LP作成プロンプト.md
+    ・必ず <a href> で出力する。<button> + JS遷移にすると GA4リンカーと
+      Conversion Linker が働かず、_gl / _gcl_aw が付かない。
+    ・reserve_url にUTMパラメータを一切足さない。着地URLにUTMがあると
+      GA4がそこで新しいセッションを切り、広告経由という情報が referral に
+      上書きされる。utm_content だけでも同じ結果になる。
+      CTAの設置位置は data-ga-location で送るので、UTMを使う必要がない。
+    ・計測は data-ga-event 属性のみで行う。ここで dataLayer.push を書くと
+      委譲リスナーとの二重計上になり、1クリックが2件に膨らむ。
 
   引数:
-    place … 'header' | 'hero' | 'sticky'。計測用のラベル。
+    place … data-ga-location の値。header / hero / float_cta など既存命名に揃える。
     style … 'solid' | 'ghost' | 'bar'
 #}
 
 {% macro reserve_button(store, ui, place, style) %}
 {%- if store.reserve_url -%}
-  {%- set href = store.reserve_url ~ "?utm_source=" ~ store.channel_utm_source ~ "&utm_medium=referral" -%}
+  {%- set href = store.reserve_url -%}
   {%- set method = "external" -%}
 {%- else -%}
   {%- set href = "tel:" ~ store.tel_raw -%}
@@ -25,7 +32,9 @@
 <a class="reserve reserve--{{ style }}"
    href="{{ href }}"
    {% if method == "external" %}target="_blank" rel="noopener"{% endif %}
-   onclick="dataLayer.push({event:'reserve_click',method:'{{ method }}',location:'{{ place }}'})">
+   data-ga-event="reserve_click"
+   data-ga-location="{{ place }}"
+   data-ga-method="{{ method }}">
   <span class="reserve__label">{{ ui.reserve_label }}</span>
   {%- if method == "tel" %}
   <span class="reserve__sub">{{ ui.reserve_sub_tel }} {{ store.tel_display }}</span>

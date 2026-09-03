@@ -17,17 +17,29 @@ eleventyComputed:
 <title>{{ store.name_full_en }}</title>
 <meta name="description" content="{{ ui.meta_description }}">
 
+{# ドメイン確定後は絶対URLを組み立てて canonical / og に使う。
+   GBPのウェブサイト欄は ?utm_source=gbp 付きで登録するため、
+   default チャネルにも自己参照 canonical を出してURLを1本に寄せる。 #}
+{% set base_url = "" %}
+{% if stores.brand.domain %}
+  {% set base_url = "https://" ~ stores.brand.domain %}
+{% endif %}
+{% set canonical_url = base_url ~ "/" ~ store.region ~ "/" ~ store.slug ~ "/" %}
+
 {% if store.channel_id != "default" %}
 <meta name="robots" content="noindex,follow">
-{% if stores.brand.domain %}
-<link rel="canonical" href="https://{{ stores.brand.domain }}/{{ store.region }}/{{ store.slug }}/">
 {% endif %}
+{% if base_url %}
+<link rel="canonical" href="{{ canonical_url }}">
 {% endif %}
 
 <meta property="og:type" content="restaurant">
 <meta property="og:title" content="{{ store.name_full_en }}">
 <meta property="og:description" content="{{ ui.meta_description }}">
-{% if store.hero_image %}<meta property="og:image" content="{{ store.hero_image }}">{% endif %}
+{% if base_url %}<meta property="og:url" content="{{ canonical_url }}">{% endif %}
+{# og:image は絶対URLでないとSNS側でサムネイルが出ない #}
+{% if store.hero_image %}<meta property="og:image" content="{{ base_url }}{{ store.hero_image }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,13 +74,23 @@ eleventyComputed:
     "addressRegion": "Tokyo",
     "addressLocality": "Taito-ku",
     "streetAddress": "{{ store.address_en_line1 }} {{ store.address_en_line2 }}"
-  }{% if store.hours %},
-  "openingHours": "{{ store.hours }}"{% endif %}{% if store.reserve_url %},
-  "acceptsReservations": "{{ store.reserve_url }}"{% endif %}
+  }{% if base_url %},
+  "url": "{{ canonical_url }}"{% endif %}{% if base_url and store.hero_image %},
+  "image": "{{ base_url }}{{ store.hero_image }}"{% endif %}{% if store.hours_schema %},
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": {{ store.hours_schema.days | dump | safe }},
+    "opens": "{{ store.hours_schema.opens }}",
+    "closes": "{{ store.hours_schema.closes }}"
+  }]{% endif %}{% if store.maps_link or store.instagram_url %},
+  {# LPとGBPを同じ店だとGoogleに認識させるため #}
+  "sameAs": [{% if store.maps_link %}"{{ store.maps_link }}"{% endif %}{% if store.maps_link and store.instagram_url %}, {% endif %}{% if store.instagram_url %}"{{ store.instagram_url }}"{% endif %}]{% endif %}{% if store.reserve_url %},
+  "acceptsReservations": true{% endif %}
 }
 </script>
 </head>
 <body>
+{% include "partials/analytics-body.njk" %}
 
 <div class="topbar">
   {# フル店名のみ。GBP・検索結果と表記を突き合わせやすくするため。 #}
@@ -267,7 +289,7 @@ eleventyComputed:
           <span class="info__k">{{ ui.access_k_tel }}</span>
           <p class="info__v">
             <a class="tel-big gild" href="tel:{{ store.tel_raw }}"
-               onclick="dataLayer.push({event:'tel_click',location:'access'})">{{ store.tel_display }}</a>
+               data-ga-event="tel_click" data-ga-location="entry_access">{{ store.tel_display }}</a>
           </p>
         </li>
         {% if store.hours %}
@@ -288,7 +310,7 @@ eleventyComputed:
         {% endif %}
         <p>{{ ui.access_map_note }}</p>
         <a class="btn btn--ghost" target="_blank" rel="noopener"
-           onclick="dataLayer.push({event:'directions_click'})"
+           data-ga-event="directions_click" data-ga-location="entry_access"
            href="{% if store.maps_link %}{{ store.maps_link }}{% else %}https://www.google.com/maps/search/?api=1&query={{ store.maps_query | urlencode }}{% endif %}">{{ ui.access_map_btn }}</a>
       </div>
       {% endif %}
@@ -304,7 +326,7 @@ eleventyComputed:
     {{ store.address_en_line1 }} · {{ store.address_en_line2 }}<br>
     〒{{ store.address_postal }} {{ store.address_jp_line1 }} {{ store.address_jp_line2 }}<br>
     <a href="tel:{{ store.tel_raw }}"
-       onclick="dataLayer.push({event:'tel_click',location:'footer'})">{{ store.tel_display }}</a>
+       data-ga-event="tel_click" data-ga-location="footer">{{ store.tel_display }}</a>
   </p>
 </footer>
 
@@ -314,7 +336,7 @@ eleventyComputed:
     <strong>{{ store.name_short }}</strong>
     {{ ui.reserve_sticky_note | safe }}
   </span>
-  {{ reserve_button(store, ui, "sticky", "bar") }}
+  {{ reserve_button(store, ui, "float_cta", "bar") }}
 </div>
 
 <script>
