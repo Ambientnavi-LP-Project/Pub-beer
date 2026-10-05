@@ -61,7 +61,7 @@ const STORES = [
     tel_raw: "08083782101",
 
     // ▼ GBP(Googleビジネスプロフィール)から転記。表記はGBP側と一致させること。
-    hours: "12:00 – 23:00",
+    hours: "11:00 – 23:00",
     hours_note: "Open Daily",
     closed_note: "",      // 定休日なし
 
@@ -72,7 +72,7 @@ const STORES = [
     //       opens: "11:00", closes: "23:00" }
     hours_schema: {
       days: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-      opens: "12:00",
+      opens: "11:00",
       closes: "23:00"
     },
 
