@@ -50,7 +50,7 @@ const STORES = [
     city: "Asakusa, Tokyo",
     region_label: "Nishi-Asakusa · Tokyo",
     address_postal: "111-0035",
-    address_jp_line1: "東京都台東区西浅草2丁目2−2",
+    address_jp_line1: "東京都台東区西浅草２丁目２−２",
     address_jp_line2: "藤代ビル 1F",
     // ※ 「藤代ビル」の英字表記は未確認。正式表記が判明したら差し替えること。
     address_en_line1: "2-2-2 Nishi-Asakusa, Taito-ku, Tokyo",
